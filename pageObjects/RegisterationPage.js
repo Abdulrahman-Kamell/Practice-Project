@@ -22,11 +22,15 @@ export class RegisterationPage {
         await this.emailInput.fill(email);
         await this.phoneNumberInput.fill(phone);
         await this.occupationDropDown.selectOption(occupation);
-        await this.page.getByRole('radio', { name: gender, exact: true }).check();
+        // Optimization: create the gender locator once before interacting with it.
+        const genderOption = this.page.getByRole('radio', { name: gender, exact: true });
+        await genderOption.check();
         await this.passwordInput.fill(password);
         await this.confirmPasswordInput.fill(password);
         await this.ageConsent.check();
         await this.registerButton.click();
+        // Optimization: wait for login button as a post-submit readiness signal.
+        await this.page.getByRole('button', { name: 'Login' }).waitFor();
 
     }
 

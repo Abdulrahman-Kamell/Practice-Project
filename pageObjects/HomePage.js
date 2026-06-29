@@ -7,16 +7,21 @@ export class Dashboard {
         this.page = page;
         this.sideBar = new SideBar(page);
         this.products = page.locator('.card-body');
-        this.productTitle = page.locator('.card-body b');
         this.continueShoppingButton = page.getByRole('link', { name: 'Continue Shopping' });
+
+    }
+
+    // Optimization: expose a shared product-card locator to reduce repetition.
+    getProductCard(productName) {
+
+        return this.products.filter({ hasText: productName }).first();
 
     }
 
     async addProductToCart(productName) {
 
-        const count = await this.products.count();
-        await this.products
-            .filter({ hasText: productName })
+        // Optimization: remove unused counting and use the shared product-card helper.
+        await this.getProductCard(productName)
             .getByRole('button', { name: 'Add To Cart' })
             .click();
         await this.page.waitForLoadState('networkidle');
@@ -25,16 +30,8 @@ export class Dashboard {
 
     async viewProductDetails(productName) {
 
-        const count = await this.products.count();
-        for (let i = 0; i < count; i++) {
-            const product = this.products.nth(i);
-            const title = await product.locator('b').textContent();
-
-            if (title.trim() === productName) {
-                await product.locator('text= View').click();
-                break;
-            }
-        }
+        // Optimization: use direct filtering instead of a full manual scan loop.
+        await this.getProductCard(productName).getByRole('button', { name: 'View' }).click();
         await this.page.waitForLoadState('networkidle');
 
     }

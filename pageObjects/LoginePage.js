@@ -8,7 +8,8 @@ export class LoginPage {
         this.passwordInput = page.locator('#userPassword');
         this.loginButton = page.getByRole('button', { name: 'Login' });
         this.forgotPasswordLink = page.getByRole('link', { name: 'Forgot password?' });
-        this.regesterLink = page.getByRole('link', { name: 'Register' });
+        // Optimization: use consistent naming for the register link locator.
+        this.registerLink = page.getByRole('link', { name: 'Register' });
 
     }
 
@@ -17,12 +18,16 @@ export class LoginPage {
         await this.userNameInput.fill(userName);
         await this.passwordInput.fill(password);
         await this.loginButton.click();
+        // Optimization: wait for dashboard content instead of relying on implicit timing.
+        await this.page.locator('.card-body').first().waitFor();
 
     }
 
     async navigateToRegisteration() {
 
-        await this.regesterLink.click();
+        await this.registerLink.click();
+        // Optimization: wait for registration form to be visible after navigation.
+        await this.page.getByRole('button', { name: 'Register' }).waitFor();
 
     }
 

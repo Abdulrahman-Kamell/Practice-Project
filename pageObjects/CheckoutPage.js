@@ -7,21 +7,11 @@ export class CheckoutPage {
         this.page = page;
         this.sideBar = new SideBar(page);
 
-        this.creditCardInput = page.locator('.field')
-            .filter({ hasText: 'Credit Card Number' })
-            .locator('input');
-
-        this.cvvInput = page.locator('.field')
-            .filter({ hasText: 'CVV' })
-            .locator('input');
-
-        this.nameOnCardInput = page.locator('.field')
-            .filter({ hasText: 'Name on Card' })
-            .locator('input');
-
-        this.applyCouponInput = page.locator('.field')
-            .filter({ hasText: 'Apply Coupon' })
-            .locator('input');
+        // Optimization: use one reusable resolver for similar field locators.
+        this.creditCardInput = this.getInputField('Credit Card Number');
+        this.cvvInput = this.getInputField('CVV');
+        this.nameOnCardInput = this.getInputField('Name on Card');
+        this.applyCouponInput = this.getInputField('Apply Coupon');
 
         this.monthDropdown = page.locator('select').first();
         this.yearDropdown = page.locator('select').nth(1);
@@ -29,6 +19,15 @@ export class CheckoutPage {
         this.applyCouponButton = page.locator('text=Apply Coupon');
         this.placeOrderButton = page.locator('text=PLACE ORDER');
         this.orderIdLabel = page.locator('tbody tr label').last();
+
+    }
+
+    // Optimization: keep field selector logic in one place to simplify maintenance.
+    getInputField(fieldLabel) {
+
+        return this.page.locator('.field')
+            .filter({ hasText: fieldLabel })
+            .locator('input');
 
     }
 
@@ -44,8 +43,9 @@ export class CheckoutPage {
 
     async selectCountry(countryName) {
 
+        // Optimization: remove unnecessary await when creating a locator object.
         await this.countryInput.pressSequentially(countryName);
-        const dropdown = await this.page.locator('.ta-results');
+        const dropdown = this.page.locator('.ta-results');
         await dropdown.waitFor();
 
         await dropdown
@@ -58,8 +58,9 @@ export class CheckoutPage {
     async placeOrder() {
 
         await this.placeOrderButton.click();
+        // Optimization: guard against null textContent to avoid runtime failures.
         const orderId = await this.orderIdLabel.textContent();
-        return orderId.replace(/\|/g, '').trim();
+        return (orderId ?? '').replace(/\|/g, '').trim();
 
     }
 

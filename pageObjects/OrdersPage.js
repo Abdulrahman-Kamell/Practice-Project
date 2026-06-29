@@ -7,21 +7,31 @@ export class OrdersPage {
         this.page = page;
         this.sideBar = new SideBar(page);
         this.orders = page.locator('tbody').locator('tr');
-        this.goBackToShopButton = page.getByRole('Button', { name: 'Go Back To Shop' });
-        this.goBackToCartButton = page.getByRole('Button', { name: 'Go Back To Cart' });
+        // Optimization: use valid ARIA role casing for robust role-based selectors.
+        this.goBackToShopButton = page.getByRole('button', { name: 'Go Back To Shop' });
+        this.goBackToCartButton = page.getByRole('button', { name: 'Go Back To Cart' });
+
+    }
+
+    // Optimization: centralize order-row resolution to avoid duplicated filters.
+    getOrderRow(orderId) {
+
+        return this.orders.filter({ hasText: orderId }).first();
 
     }
 
     async viewOrderDetails(orderId) {
 
-        const row = this.orders.filter({ hasText: orderId });
+        // Optimization: use shared row helper for consistent targeting.
+        const row = this.getOrderRow(orderId);
         await row.getByRole('button', { name: 'View' }).click();
 
     }
 
     async deleteOrder(orderId) {
 
-        const row = this.orders.filter({ hasText: orderId });
+        // Optimization: use shared row helper for consistent targeting.
+        const row = this.getOrderRow(orderId);
         await row.getByRole('button', { name: 'Delete' }).click();
         await this.page.waitForLoadState('networkidle');
 

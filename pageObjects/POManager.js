@@ -1,6 +1,6 @@
 import { RegisterationPage } from './RegisterationPage';
-import { LoginPage } from './LoginPage';
-import { HomePage } from './HomePage';
+import { LoginPage } from './LoginePage';
+import { Dashboard } from './HomePage';
 import { CartPage } from './CartPage';
 import { CheckoutPage } from './CheckoutPage';
 import { OrdersPage } from './OrdersPage';
@@ -10,34 +10,78 @@ export class POManager {
 
     constructor(page) {
         this.page = page;
+        // Optimization: cache page object instances to avoid unnecessary re-instantiation.
+        this.pageObjects = {};
     }
 
     getRegisterationPage() {
-        return new RegisterationPage(this.page);
+
+        // Optimization: lazily initialize and reuse the same page object instance.
+        if (!this.pageObjects.registerationPage) {
+            this.pageObjects.registerationPage = new RegisterationPage(this.page);
+        }
+        return this.pageObjects.registerationPage;
+
     }
 
     getLoginPage() {
-        return new LoginPage(this.page);
+
+        // Optimization: lazily initialize and reuse the same page object instance.
+        if (!this.pageObjects.loginPage) {
+            this.pageObjects.loginPage = new LoginPage(this.page);
+        }
+        return this.pageObjects.loginPage;
+
     }
 
     getHomePage() {
-        return new Dashboard(this.page);
+
+        // Optimization: lazily initialize and reuse the same page object instance.
+        if (!this.pageObjects.homePage) {
+            this.pageObjects.homePage = new Dashboard(this.page);
+        }
+        return this.pageObjects.homePage;
+
     }
 
     getCartPage() {
-        return new CartPage(this.page);
+
+        // Optimization: lazily initialize and reuse the same page object instance.
+        if (!this.pageObjects.cartPage) {
+            this.pageObjects.cartPage = new CartPage(this.page);
+        }
+        return this.pageObjects.cartPage;
+
     }
 
     getCheckoutPage() {
-        return new CheckoutPage(this.page);
+
+        // Optimization: lazily initialize and reuse the same page object instance.
+        if (!this.pageObjects.checkoutPage) {
+            this.pageObjects.checkoutPage = new CheckoutPage(this.page);
+        }
+        return this.pageObjects.checkoutPage;
+
     }
 
     getOrdersPage() {
-        return new OrdersPage(this.page);
+
+        // Optimization: lazily initialize and reuse the same page object instance.
+        if (!this.pageObjects.ordersPage) {
+            this.pageObjects.ordersPage = new OrdersPage(this.page);
+        }
+        return this.pageObjects.ordersPage;
+
     }
 
     getSideBar() {
-        return new SideBar(this.page);
+
+        // Optimization: lazily initialize and reuse the same page object instance.
+        if (!this.pageObjects.sideBar) {
+            this.pageObjects.sideBar = new SideBar(this.page);
+        }
+        return this.pageObjects.sideBar;
+
     }
 
 }
