@@ -24,7 +24,7 @@ export default async function globalSetup() {
   await page.locator(".card-body").first().waitFor();
 
   await page.context().storageState({
-    path: path.join(__dirname, "storageState.json"),
+    path: path.join(__dirname, "../.auth/storageState.json"),
   });
 
   await browser.close();

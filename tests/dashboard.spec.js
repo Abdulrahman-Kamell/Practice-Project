@@ -2,7 +2,7 @@ import { test, expect } from "../fixtures/pageFixtures";
 import { ROUTES } from "../constants/routes";
 
 // Use the storage state saved by globalSetup — no login needed per test.
-test.use({ storageState: "storageState.json" });
+test.use({ storageState: ".auth/storageState.json" });
 
 // ---------------------------------------------------------------------------
 // Shared setup — navigate to dashboard (already authenticated)

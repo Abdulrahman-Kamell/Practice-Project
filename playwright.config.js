@@ -10,7 +10,7 @@ dotenv.config();
  */
 export default defineConfig({
   testDir: "./tests",
-  globalSetup: "./globalSetup.js",
+  globalSetup: "./setup/globalSetup.js",
   /* Raised from 30 s — this demo site has slow API responses. */
   timeout: 30000,
   /* Run tests in files in parallel */
