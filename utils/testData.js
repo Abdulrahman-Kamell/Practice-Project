@@ -1,5 +1,22 @@
 import { faker } from "@faker-js/faker";
 
+/**
+ * Returns the login credentials loaded from environment variables.
+ * Set LOGIN_USERNAME and LOGIN_PASSWORD in your .env file.
+ */
+export function getLoginCredentials() {
+  const username = process.env.LOGIN_USERNAME;
+  const password = process.env.LOGIN_PASSWORD;
+
+  if (!username || !password) {
+    throw new Error(
+      "LOGIN_USERNAME and LOGIN_PASSWORD must be set in your .env file.",
+    );
+  }
+
+  return { username, password };
+}
+
 const OCCUPATIONS = ["Doctor", "Student", "Engineer", "Scientist"];
 const GENDERS = ["Male", "Female"];
 

@@ -4,3 +4,4 @@ playwright-report/
 .playwright/
 .env
 *.log
+storageState.json

@@ -15,10 +15,10 @@ export class Dashboard {
     this.resultsCount = page.locator("#res");
 
     // Filter: search box
-    this.searchInput = page.getByPlaceholder("search");
+    this.searchInput = page.getByPlaceholder("search").last();
     // Filter: price range inputs
-    this.minPriceInput = page.getByPlaceholder("Min Price");
-    this.maxPriceInput = page.getByPlaceholder("Max Price");
+    this.minPriceInput = page.getByPlaceholder("Min Price").last();
+    this.maxPriceInput = page.getByPlaceholder("Max Price").last();
     // Pagination: the ngx-pagination list next/previous items
     this.paginationNext = page.locator(".pagination-next a");
     this.paginationPrev = page.locator(".pagination-previous a");
@@ -40,7 +40,10 @@ export class Dashboard {
   }
 
   async searchProduct(productName) {
-    await this.searchInput.fill(productName);
+    await this.searchInput.click();
+    await this.searchInput.pressSequentially(productName);
+    await this.searchInput.press("Enter");
+    await this.page.waitForLoadState("networkidle");
   }
 
   async addProductToCart(productName) {

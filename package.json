@@ -1,6 +1,7 @@
 {
   "name": "practice-project",
   "version": "1.0.0",
+  "type": "module",
   "description": "",
   "main": "index.js",
   "scripts": {},
@@ -10,6 +11,7 @@
   "devDependencies": {
     "@faker-js/faker": "^10.5.0",
     "@playwright/test": "^1.61.0",
-    "@types/node": "^26.0.0"
+    "@types/node": "^26.0.0",
+    "dotenv": "^17.4.2"
   }
 }
