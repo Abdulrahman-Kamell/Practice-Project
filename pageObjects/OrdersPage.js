@@ -43,6 +43,15 @@ export class OrdersPage {
     await this.page.waitForLoadState("networkidle");
   }
 
+  // Removes all orders from the list. Safe to call on an already-empty list.
+  async clearOrders() {
+    await this.page.waitForLoadState("networkidle");
+    while ((await this.orders.count()) > 0) {
+      await this.orders.first().getByRole("button", { name: "Delete" }).click();
+      await this.page.waitForLoadState("networkidle");
+    }
+  }
+
   async goBackToShop() {
     await this.goBackToShopButton.click();
     await this.page.waitForLoadState("networkidle");
