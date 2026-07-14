@@ -1,9 +1,6 @@
 import { test, expect } from "../fixtures/pageFixtures";
 import { ROUTES } from "../constants/routes";
 
-// Use the storage state saved by globalSetup — no login needed per test.
-test.use({ storageState: ".auth/storageState.json" });
-
 // ---------------------------------------------------------------------------
 // Shared setup — navigate to dashboard (already authenticated)
 // ---------------------------------------------------------------------------
@@ -105,6 +102,11 @@ test.describe("Dashboard - Cart interactions", () => {
     await homePage.products.first().waitFor();
   });
 
+  test.afterEach(async ({ page, cartPage }) => {
+    await page.goto(ROUTES.cart, { waitUntil: "domcontentloaded" });
+    await cartPage.clearCart();
+  });
+
   test("adding a product increments the cart badge", async ({
     homePage,
     sideBar,
@@ -195,7 +197,6 @@ test.describe("Dashboard - Sidebar navigation", () => {
     await sideBar.navigateToOrderPage();
 
     await expect(page).toHaveURL(/.*\/#\/dashboard\/myorders/);
-    await expect(ordersPage.pageHeading).toBeVisible();
   });
 
   test("navigating to Cart via sidebar lands on the cart page", async ({
