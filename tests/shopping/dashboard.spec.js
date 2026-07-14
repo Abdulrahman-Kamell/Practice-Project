@@ -1,5 +1,5 @@
-import { test, expect } from "../fixtures/pageFixtures";
-import { ROUTES } from "../constants/routes";
+import { test, expect } from "../../fixtures/pageFixtures";
+import { ROUTES } from "../../constants/routes";
 
 // ---------------------------------------------------------------------------
 // Shared setup — navigate to dashboard (already authenticated)
