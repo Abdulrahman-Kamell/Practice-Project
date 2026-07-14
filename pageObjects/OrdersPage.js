@@ -1,3 +1,4 @@
+import { expect } from "@playwright/test";
 import { SideBar } from "./SideBar";
 
 export class OrdersPage {
@@ -39,16 +40,22 @@ export class OrdersPage {
   async deleteOrder(orderId) {
     // Use shared row helper for consistent targeting.
     const row = this.getOrderRow(orderId);
+    // Wait for the row to actually render before counting — goToOrders()
+    // only waits for the URL to change, not for the app to finish fetching
+    // and rendering the orders table afterward. Counting too early can
+    // see a still-empty table and capture the wrong baseline.
+    await row.waitFor({ state: "visible" });
+    const countBefore = await this.orders.count();
     await row.getByRole("button", { name: "Delete" }).click();
-    await this.page.waitForLoadState("networkidle");
+    await expect(this.orders).toHaveCount(countBefore - 1);
   }
 
   // Removes all orders from the list. Safe to call on an already-empty list.
   async clearOrders() {
-    await this.page.waitForLoadState("networkidle");
     while ((await this.orders.count()) > 0) {
+      const countBefore = await this.orders.count();
       await this.orders.first().getByRole("button", { name: "Delete" }).click();
-      await this.page.waitForLoadState("networkidle");
+      await expect(this.orders).toHaveCount(countBefore - 1);
     }
   }
 
