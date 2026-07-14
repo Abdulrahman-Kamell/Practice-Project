@@ -1,3 +1,5 @@
+import { ROUTES } from "../constants/routes.js";
+
 export class SideBar {
   constructor(page) {
     this.page = page;
@@ -9,28 +11,26 @@ export class SideBar {
     this.cartItemCount = page.locator(
       'button[routerlink="/dashboard/cart"] label',
     );
-    // Destination readiness locators
-    this.homeReadyMarker = page.locator(".card-body").first();
-    this.ordersReadyMarker = page.locator("tr").first();
-    this.cartReadyMarker = page.locator("div li").first();
   }
 
   async navigateToHomePage() {
-    await this.navigateAndWait(this.homeButton, this.homeReadyMarker);
+    await this.navigateAndWait(this.homeButton, ROUTES.home);
   }
 
   async navigateToOrderPage() {
-    await this.navigateAndWait(this.ordersButton, this.ordersReadyMarker);
+    await this.navigateAndWait(this.ordersButton, ROUTES.orders);
   }
 
   async navigateToCartPage() {
-    await this.navigateAndWait(this.cartButton, this.cartReadyMarker);
+    await this.navigateAndWait(this.cartButton, ROUTES.cart);
   }
 
-  // Shared navigation helper: click a button and wait for a stable ready-marker.
-  async navigateAndWait(button, readyMarker) {
+  // Shared navigation helper: click a button and wait until the URL contains
+  // the expected route fragment. This is state-independent — it confirms the
+  // navigation completed without assuming any data is present on the page.
+  async navigateAndWait(button, routeFragment) {
     await button.click();
-    await readyMarker.waitFor();
+    await this.page.waitForURL((url) => url.href.includes(routeFragment));
   }
 
   async signOut() {

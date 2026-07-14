@@ -1,0 +1,149 @@
+import { test, expect } from "../../fixtures/pageFixtures";
+import { ROUTES } from "../../constants/routes";
+
+const CHECKOUT = {
+  cardNumber: "4542 9931 9292 2293",
+  month: "01",
+  year: "28",
+  cvv: "123",
+  nameOnCard: "Test User",
+  country: "Egypt",
+};
+
+// ---------------------------------------------------------------------------
+// Shared setup — add a product to cart and proceed to checkout
+// ---------------------------------------------------------------------------
+test.describe("Checkout flow", () => {
+  let productName;
+
+  test.beforeEach(async ({ page, homePage, sideBar, cartPage }) => {
+    await page.goto(ROUTES.home, { waitUntil: "domcontentloaded" });
+    await homePage.products.first().waitFor();
+
+    productName = (
+      await homePage.products.first().locator("b").textContent()
+    ).trim();
+
+    await homePage.addProductToCart(productName);
+    await sideBar.navigateToCartPage();
+    await cartPage.checkout();
+  });
+
+  test.afterEach(async ({ page, cartPage, ordersPage }) => {
+    await page.goto(ROUTES.cart, { waitUntil: "domcontentloaded" });
+    await cartPage.clearCart();
+    await page.goto(ROUTES.orders, { waitUntil: "domcontentloaded" });
+    await ordersPage.clearOrders();
+  });
+
+  test("checkout page shows credit card payment method", async ({
+    checkoutPage,
+  }) => {
+    await expect(checkoutPage.paymentMethodCreditCard).toBeVisible();
+  });
+
+  test("checkout page shows all payment method options", async ({
+    checkoutPage,
+  }) => {
+    await expect(checkoutPage.paymentMethodCreditCard).toBeVisible();
+    await expect(checkoutPage.paymentMethodPaypal).toBeVisible();
+    await expect(checkoutPage.paymentMethodSepa).toBeVisible();
+    await expect(checkoutPage.paymentMethodInvoice).toBeVisible();
+  });
+
+  test("checkout page shows all credit card form fields", async ({
+    checkoutPage,
+  }) => {
+    await expect(checkoutPage.creditCardInput).toBeVisible();
+    await expect(checkoutPage.cvvInput).toBeVisible();
+    await expect(checkoutPage.nameOnCardInput).toBeVisible();
+    await expect(checkoutPage.countryInput).toBeVisible();
+  });
+
+  test("placing an order shows the thank-you confirmation message", async ({
+    checkoutPage,
+    orderDetailsPage,
+  }) => {
+    await checkoutPage.fillCreditCardDetails(
+      CHECKOUT.cardNumber,
+      CHECKOUT.month,
+      CHECKOUT.year,
+      CHECKOUT.cvv,
+      CHECKOUT.nameOnCard,
+    );
+    await checkoutPage.selectCountry(CHECKOUT.country);
+    await checkoutPage.placeOrder();
+
+    await expect(orderDetailsPage.thankYouMessage).toBeVisible();
+  });
+
+  test("order confirmation page shows a non-empty order ID", async ({
+    checkoutPage,
+    orderDetailsPage,
+  }) => {
+    await checkoutPage.fillCreditCardDetails(
+      CHECKOUT.cardNumber,
+      CHECKOUT.month,
+      CHECKOUT.year,
+      CHECKOUT.cvv,
+      CHECKOUT.nameOnCard,
+    );
+    await checkoutPage.selectCountry(CHECKOUT.country);
+    await checkoutPage.placeOrder();
+
+    const orderId = await orderDetailsPage.getOrderId();
+    expect(orderId).toBeTruthy();
+  });
+
+  test("order confirmation shows the purchased product name", async ({
+    checkoutPage,
+    orderDetailsPage,
+  }) => {
+    await checkoutPage.fillCreditCardDetails(
+      CHECKOUT.cardNumber,
+      CHECKOUT.month,
+      CHECKOUT.year,
+      CHECKOUT.cvv,
+      CHECKOUT.nameOnCard,
+    );
+    await checkoutPage.selectCountry(CHECKOUT.country);
+    await checkoutPage.placeOrder();
+
+    // orderedProductName is now a method (not a static property), since it
+    // needs productName to find the correct row when an order could
+    // contain more than one product. The locator it returns is already
+    // filtered by productName, so we assert visibility rather than
+    // re-checking text content — that would just be testing our own filter.
+    await expect(
+      orderDetailsPage.getProductNameCell(productName),
+    ).toBeVisible();
+  });
+
+  test("order confirmation shows billing address with selected country", async ({
+    page,
+    checkoutPage,
+    orderDetailsPage,
+    ordersPage,
+    orderViewPage,
+  }) => {
+    await checkoutPage.fillCreditCardDetails(
+      CHECKOUT.cardNumber,
+      CHECKOUT.month,
+      CHECKOUT.year,
+      CHECKOUT.cvv,
+      CHECKOUT.nameOnCard,
+    );
+    await checkoutPage.selectCountry(CHECKOUT.country);
+    await checkoutPage.placeOrder();
+
+    // Billing/delivery address only renders on the Orders -> View page,
+    // NOT on this immediate thank-you confirmation page — confirmed by
+    // manually checking both pages' real DOM. Navigate there first.
+    const orderId = await orderDetailsPage.getOrderId();
+    await page.goto(ROUTES.orders, { waitUntil: "domcontentloaded" });
+    await ordersPage.viewOrderDetails(orderId);
+
+    const billing = await orderViewPage.getBillingDetails();
+    expect(billing.country).toContain(CHECKOUT.country);
+  });
+});

@@ -1,3 +1,4 @@
+import { expect } from "@playwright/test";
 import { SideBar } from "./SideBar";
 
 export class CartPage {
@@ -47,6 +48,15 @@ export class CartPage {
     const cartItem = this.getCartItem(productName);
     await cartItem.locator("button.btn-danger").click();
     await cartItem.waitFor({ state: "detached" });
+  }
+
+  // Removes all items from the cart. Safe to call on an already-empty cart.
+  async clearCart() {
+    while ((await this.cartItems.count()) > 0) {
+      const countBefore = await this.cartItems.count();
+      await this.cartItems.first().locator("button.btn-danger").click();
+      await expect(this.cartItems).toHaveCount(countBefore - 1);
+    }
   }
 
   async continueShopping() {

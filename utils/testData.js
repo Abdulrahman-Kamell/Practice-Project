@@ -35,7 +35,7 @@ export function generateRegistrationData() {
     // Timestamp keeps the email unique even if faker ever repeats a name,
     // and makes it obvious in test reports which run created this user.
     email: `${firstName}.${lastName}.${Date.now()}@test.com`.toLowerCase(),
-    phone: faker.string.numeric(10),
+    phone: faker.string.fromCharacters("123456789", 10),
     occupation: faker.helpers.arrayElement(OCCUPATIONS),
     gender: faker.helpers.arrayElement(GENDERS),
     password: `${faker.internet.password({ length: 10 })}1!`,

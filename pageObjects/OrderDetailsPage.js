@@ -1,59 +1,44 @@
 import { SideBar } from "./SideBar";
 
+/**
+ * Represents the immediate post-checkout "Thankyou for the order" page.
+ * This is a DIFFERENT page/template from the order detail page reached
+ * via Orders -> View (see OrderViewPage.js) — billing/delivery address
+ * only exists on that other page, not here.
+ */
 export class OrderDetailsPage {
   constructor(page) {
     this.page = page;
     this.sideBar = new SideBar(page);
 
     // Assertion: confirmation message displayed after a successful order placement
-    this.thankYouMessage = page.getByText("Thank you for Shopping With Us");
+    this.thankYouMessage = page.getByText("THANKYOU FOR THE ORDER.");
 
-    // Product summary section
-    this.productCard = page.locator(".artwork-card");
     // Assertion: the placed order ID
-    this.orderIdText = page.locator(".col-text");
-    // Assertion: product details shown in the order summary
-    this.orderedProductName = this.productCard.locator(".title");
-    this.orderedProductPrice = this.productCard.locator(".price");
-    // Assertion: billing and delivery address sections
-    this.billingSection = page.locator(".address").filter({
-      has: page.getByText("Billing Address"),
-    });
-    this.deliverySection = page.locator(".address").filter({
-      has: page.getByText("Delivery Address"),
-    });
+    this.orderIdText = page.locator("td.em-spacer-1 label").last();
+
     // Action: navigate back to the orders list from the confirmation page
     this.viewOrdersButton = page.locator(
       'div[routerlink="/dashboard/myorders"]',
     );
   }
 
+  // The confirmation table nests several <td> wrappers around each product
+  // (content-wrap > order-summary-box > line-item), and hasText matches
+  // ancestors as well as the element that actually contains the text — so
+  // filtering by "Qty:" alone matched all three nested levels at once
+  // (strict mode violation). ".line-item.product-info-column" is the real,
+  // specific class on the innermost cell, confirmed from the actual DOM.
+  getProductNameCell(productName) {
+    return this.page
+      .locator("td.line-item.product-info-column")
+      .filter({ hasText: productName });
+  }
+
   async getOrderId() {
     await this.orderIdText.waitFor();
     const raw = await this.orderIdText.textContent();
-    return (raw ?? "").trim();
-  }
-
-  async getBillingDetails() {
-    const [email, country] = await this.billingSection
-      .locator("p")
-      .allTextContents();
-
-    return {
-      email: email.trim(),
-      country: country.replace("Country - ", "").trim(),
-    };
-  }
-
-  async getDeliveryDetails() {
-    const [email, country] = await this.deliverySection
-      .locator("p")
-      .allTextContents();
-
-    return {
-      email: email.trim(),
-      country: country.replace("Country - ", "").trim(),
-    };
+    return raw.replace(/\|/g, "").trim();
   }
 
   async goToOrders() {

@@ -19,9 +19,9 @@ export class CheckoutPage {
 
     // Assertion: payment method tiles (Credit Card, Paypal, SEPA, Invoice)
     this.paymentMethodCreditCard = page.locator(".payment__type--cc");
-    this.paymentMethodPaypal = page.locator(".payment__type--paypal");
-    this.paymentMethodSepa = page.locator(".payment__type--sepa");
-    this.paymentMethodInvoice = page.locator(".payment__type--invoice");
+    this.paymentMethodPaypal = page.getByText("Paypal");
+    this.paymentMethodSepa = page.getByText("SEPA");
+    this.paymentMethodInvoice = page.getByText("Invoice");
   }
 
   // Field selector logic in one place to simplify maintenance.
@@ -41,11 +41,11 @@ export class CheckoutPage {
   }
 
   async selectCountry(countryName) {
-    await this.countryInput.pressSequentially(countryName);
-    const dropdown = this.page.locator(".ta-results");
-    await dropdown.waitFor();
-
-    await dropdown.getByRole("button").filter({ hasText: countryName }).click();
+    await this.countryInput.pressSequentially(countryName, { delay: 150 });
+    // Typing triggers an autocomplete API call; wait for the loading indicator
+    // to clear before the suggestion button is rendered.
+    //await this.page.locator("text=Loading....").waitFor({ state: "hidden" });
+    await this.page.getByRole("button", { name: countryName }).click();
   }
 
   async placeOrder() {
