@@ -10,21 +10,23 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
  * Each key below becomes a fixture you can destructure directly in a test:
  *
  *   test('...', async ({ loginPage, homePage }) => { ... })
- *
- * Every fixture here pulls from the SAME POManager instance for a given test,
- * so page objects stay cached/shared exactly like your POManager already does.
  */
 export const test = base.extend({
-  // Overrides Playwright's built-in storageState option to route each test to
-  // the per-worker account file created by globalSetup.js. No account setup
-  // happens here — the expensive registration already ran once upfront.
+  // -------------------------------------------------------------------------
+  // Picks the storage state file that globalSetup.js created for THIS
+  // worker (.auth/worker-{parallelIndex}.json). This is cheap and test-scoped
+  // — all the actual expensive work (registering + logging in) already
+  // happened once upfront in globalSetup, not here.
+  //
+  // testInfo.parallelIndex is a stable 0-based index Playwright assigns per
+  // worker, matching the workerIndex used when globalSetup created the files.
+  // -------------------------------------------------------------------------
   storageState: async ({}, use, testInfo) => {
     await use(
       path.join(__dirname, `../.auth/worker-${testInfo.parallelIndex}.json`),
     );
   },
 
-  // One shared POManager per test, built from the built-in `page` fixture.
   poManager: async ({ page }, use) => {
     const poManager = new POManager(page);
     await use(poManager);
@@ -56,6 +58,10 @@ export const test = base.extend({
 
   orderDetailsPage: async ({ poManager }, use) => {
     await use(poManager.getOrderDetailsPage());
+  },
+
+  orderViewPage: async ({ poManager }, use) => {
+    await use(poManager.getOrderViewPage());
   },
 
   sideBar: async ({ poManager }, use) => {

@@ -5,6 +5,7 @@ import { CartPage } from "./CartPage";
 import { CheckoutPage } from "./CheckoutPage";
 import { OrdersPage } from "./OrdersPage";
 import { OrderDetailsPage } from "./OrderDetailsPage";
+import { OrderViewPage } from "./OrderViewPage";
 import { SideBar } from "./SideBar";
 
 export class POManager {
@@ -76,5 +77,13 @@ export class POManager {
       this.pageObjects.orderDetailsPage = new OrderDetailsPage(this.page);
     }
     return this.pageObjects.orderDetailsPage;
+  }
+
+  getOrderViewPage() {
+    // Lazily initialize and reuse the same page object instance.
+    if (!this.pageObjects.orderViewPage) {
+      this.pageObjects.orderViewPage = new OrderViewPage(this.page);
+    }
+    return this.pageObjects.orderViewPage;
   }
 }
