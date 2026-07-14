@@ -1,6 +1,6 @@
-import { test, expect } from "../fixtures/pageFixtures";
-import { getLoginCredentials } from "../utils/testData";
-import { ROUTES } from "../constants/routes";
+import { test, expect } from "../../fixtures/pageFixtures";
+import { getLoginCredentials } from "../../utils/testData";
+import { ROUTES } from "../../constants/routes";
 
 test.use({ storageState: { cookies: [], origins: [] } });
 
