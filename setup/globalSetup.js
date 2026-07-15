@@ -1,5 +1,4 @@
 import { chromium } from "@playwright/test";
-import dotenv from "dotenv";
 import path from "path";
 import { fileURLToPath } from "url";
 import { ROUTES } from "../constants/routes.js";
@@ -8,8 +7,6 @@ import { RegisterationPage } from "../pageObjects/RegisterationPage.js";
 import { CartPage } from "../pageObjects/CartPage.js";
 import { OrdersPage } from "../pageObjects/OrdersPage.js";
 import { generateRegistrationData } from "../utils/testData.js";
-
-dotenv.config();
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const BASE_URL = "https://rahulshettyacademy.com/client/";
