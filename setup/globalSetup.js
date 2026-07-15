@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 import path from "path";
 import { fileURLToPath } from "url";
 import { ROUTES } from "../constants/routes.js";
-import { LoginPage } from "../pageObjects/LoginePage.js";
+import { LoginPage } from "../pageObjects/LoginPage.js";
 import { RegisterationPage } from "../pageObjects/RegisterationPage.js";
 import { CartPage } from "../pageObjects/CartPage.js";
 import { OrdersPage } from "../pageObjects/OrdersPage.js";

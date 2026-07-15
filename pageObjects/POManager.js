@@ -1,5 +1,5 @@
 import { RegisterationPage } from "./RegisterationPage";
-import { LoginPage } from "./LoginePage";
+import { LoginPage } from "./LoginPage";
 import { Dashboard } from "./HomePage";
 import { CartPage } from "./CartPage";
 import { CheckoutPage } from "./CheckoutPage";
