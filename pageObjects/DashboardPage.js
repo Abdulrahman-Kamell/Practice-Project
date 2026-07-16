@@ -1,9 +1,6 @@
-import { SideBar } from "./SideBar";
-
-export class Dashboard {
+export class DashboardPage {
   constructor(page) {
     this.page = page;
-    this.sideBar = new SideBar(page);
     this.products = page.locator(".card-body");
     this.continueShoppingButton = page.getByRole("link", {
       name: "Continue Shopping",

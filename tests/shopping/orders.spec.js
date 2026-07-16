@@ -116,10 +116,10 @@ test.describe("Orders management", () => {
   test("user can navigate back to orders from the order details page", async ({
     page,
     ordersPage,
-    orderDetailsPage,
+    sideBar,
   }) => {
     await ordersPage.viewOrderDetails(orderId);
-    await orderDetailsPage.goToOrders();
+    await sideBar.navigateToOrderPage();
 
     await expect(ordersPage.pageHeading).toBeVisible();
     await expect(page).toHaveURL(/.*\/#\/dashboard\/myorders/);

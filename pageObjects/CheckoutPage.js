@@ -1,9 +1,6 @@
-import { SideBar } from "./SideBar";
-
 export class CheckoutPage {
   constructor(page) {
     this.page = page;
-    this.sideBar = new SideBar(page);
 
     // Personal information input fields
     this.creditCardInput = this.getInputField("Credit Card Number");
@@ -44,7 +41,6 @@ export class CheckoutPage {
     await this.countryInput.pressSequentially(countryName, { delay: 150 });
     // Typing triggers an autocomplete API call; wait for the loading indicator
     // to clear before the suggestion button is rendered.
-    //await this.page.locator("text=Loading....").waitFor({ state: "hidden" });
     await this.page.getByRole("button", { name: countryName }).click();
   }
 

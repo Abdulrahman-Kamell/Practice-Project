@@ -1,5 +1,3 @@
-import { SideBar } from "./SideBar";
-
 /**
  * Represents the immediate post-checkout "Thankyou for the order" page.
  * This is a DIFFERENT page/template from the order detail page reached
@@ -9,7 +7,6 @@ import { SideBar } from "./SideBar";
 export class OrderDetailsPage {
   constructor(page) {
     this.page = page;
-    this.sideBar = new SideBar(page);
 
     // Assertion: confirmation message displayed after a successful order placement
     this.thankYouMessage = page.getByText("THANKYOU FOR THE ORDER.");
@@ -39,10 +36,5 @@ export class OrderDetailsPage {
     await this.orderIdText.waitFor();
     const raw = await this.orderIdText.textContent();
     return raw.replace(/\|/g, "").trim();
-  }
-
-  async goToOrders() {
-    await this.viewOrdersButton.click();
-    await this.page.waitForLoadState("networkidle");
   }
 }

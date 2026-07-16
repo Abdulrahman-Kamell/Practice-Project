@@ -192,7 +192,6 @@ test.describe("Dashboard - Sidebar navigation", () => {
   test("navigating to Orders via sidebar lands on the orders page", async ({
     page,
     sideBar,
-    ordersPage,
   }) => {
     await sideBar.navigateToOrderPage();
 

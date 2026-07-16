@@ -1,10 +1,8 @@
 import { expect } from "@playwright/test";
-import { SideBar } from "./SideBar";
 
 export class CartPage {
   constructor(page) {
     this.page = page;
-    this.sideBar = new SideBar(page);
     this.checkoutButton = page.locator("text=Checkout");
     this.cartItems = page.locator("li.items");
     this.continueShoppingButton = page.getByRole("button", {

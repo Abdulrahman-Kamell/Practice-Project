@@ -1,10 +1,8 @@
 import { expect } from "@playwright/test";
-import { SideBar } from "./SideBar";
 
 export class OrdersPage {
   constructor(page) {
     this.page = page;
-    this.sideBar = new SideBar(page);
     this.orders = page.locator("tbody").locator("tr");
     this.goBackToShopButton = page.getByRole("button", {
       name: "Go Back To Shop",

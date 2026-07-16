@@ -1,5 +1,3 @@
-import { SideBar } from "./SideBar";
-
 /**
  * Represents the order detail page reached via Orders -> View. This is a
  * separate page/template from the immediate post-checkout thank-you page
@@ -9,7 +7,6 @@ import { SideBar } from "./SideBar";
 export class OrderViewPage {
   constructor(page) {
     this.page = page;
-    this.sideBar = new SideBar(page);
 
     // Assertion: billing and delivery address sections
     this.billingSection = page.locator(".address").filter({
