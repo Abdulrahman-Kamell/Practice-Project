@@ -5,12 +5,14 @@ export class API_Utils {
   }
 
   async getToken() {
+    if (this._token) return this._token;
     const loginResponse = await this.apiContext.post(
       "https://rahulshettyacademy.com/api/ecom/auth/login",
       { data: this.loginPayLoad },
     );
     const loginResponseJson = await loginResponse.json();
-    return loginResponseJson.token;
+    this._token = loginResponseJson.token;
+    return this._token;
   }
 
   async createOrder(createOrderPayload) {
