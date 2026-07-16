@@ -1,6 +1,7 @@
 import { chromium } from "@playwright/test";
 import path from "path";
 import { fileURLToPath } from "url";
+import dotenv from "dotenv";
 import { ROUTES } from "../constants/routes.js";
 import { LoginPage } from "../pageObjects/LoginPage.js";
 import { RegisterationPage } from "../pageObjects/RegisterationPage.js";
@@ -8,8 +9,10 @@ import { CartPage } from "../pageObjects/CartPage.js";
 import { OrdersPage } from "../pageObjects/OrdersPage.js";
 import { generateRegistrationData } from "../utils/testData.js";
 
+dotenv.config();
+
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const BASE_URL = "https://rahulshettyacademy.com/client/";
+const BASE_URL = process.env.BASE_URL;
 
 async function registerWithRetry(
   loginPage,
