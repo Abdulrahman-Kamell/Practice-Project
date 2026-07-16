@@ -1,7 +1,7 @@
 import { test as base, expect } from "@playwright/test";
 import path from "path";
 import { fileURLToPath } from "url";
-import { POManager } from "../pageObjects/POManager";
+import { POManager } from "../pageObjects/POManager.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -41,7 +41,7 @@ export const test = base.extend({
   },
 
   homePage: async ({ poManager }, use) => {
-    await use(poManager.getHomePage());
+    await use(poManager.getDashboardPage());
   },
 
   cartPage: async ({ poManager }, use) => {

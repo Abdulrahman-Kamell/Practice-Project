@@ -1,12 +1,12 @@
-import { RegisterationPage } from "./RegisterationPage";
-import { LoginPage } from "./LoginPage";
-import { Dashboard } from "./HomePage";
-import { CartPage } from "./CartPage";
-import { CheckoutPage } from "./CheckoutPage";
-import { OrdersPage } from "./OrdersPage";
-import { OrderDetailsPage } from "./OrderDetailsPage";
-import { OrderViewPage } from "./OrderViewPage";
-import { SideBar } from "./SideBar";
+import { RegisterationPage } from "./RegisterationPage.js";
+import { LoginPage } from "./LoginPage.js";
+import { DashboardPage } from "./DashboardPage.js";
+import { CartPage } from "./CartPage.js";
+import { CheckoutPage } from "./CheckoutPage.js";
+import { OrdersPage } from "./OrdersPage.js";
+import { OrderDetailsPage } from "./OrderDetailsPage.js";
+import { OrderViewPage } from "./OrderViewPage.js";
+import { SideBar } from "./SideBar.js";
 
 export class POManager {
   constructor(page) {
@@ -31,12 +31,12 @@ export class POManager {
     return this.pageObjects.loginPage;
   }
 
-  getHomePage() {
+  getDashboardPage() {
     // Lazily initialize and reuse the same page object instance.
-    if (!this.pageObjects.homePage) {
-      this.pageObjects.homePage = new Dashboard(this.page);
+    if (!this.pageObjects.dashboardPage) {
+      this.pageObjects.dashboardPage = new DashboardPage(this.page);
     }
-    return this.pageObjects.homePage;
+    return this.pageObjects.dashboardPage;
   }
 
   getCartPage() {
