@@ -35,6 +35,6 @@ export class SideBar {
 
   async signOut() {
     await this.signOutButton.click();
-    await this.page.waitForLoadState("networkidle");
+    await this.page.waitForURL((url) => url.href.includes("/auth/login"));
   }
 }

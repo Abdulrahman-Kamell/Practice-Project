@@ -39,16 +39,24 @@ export class DashboardPage {
   async searchProduct(productName) {
     await this.searchInput.click();
     await this.searchInput.pressSequentially(productName);
-    await this.searchInput.press("Enter");
-    await this.page.waitForLoadState("networkidle");
+    await Promise.all([
+      this.page.waitForResponse((res) =>
+        res.url().includes("/api/ecom/product/get-all-products"),
+      ),
+      this.searchInput.press("Enter"),
+    ]);
   }
 
   async addProductToCart(productName) {
     // Optimization: remove unused counting and use the shared product-card helper.
-    await this.getProductCard(productName)
-      .getByRole("button", { name: "Add To Cart" })
-      .click();
-    await this.page.waitForLoadState("networkidle");
+    await Promise.all([
+      this.page.waitForResponse((res) =>
+        res.url().includes("/api/ecom/user/add-to-cart"),
+      ),
+      this.getProductCard(productName)
+        .getByRole("button", { name: "Add To Cart" })
+        .click(),
+    ]);
   }
 
   async viewProductDetails(productName) {
@@ -56,7 +64,7 @@ export class DashboardPage {
     await this.getProductCard(productName)
       .getByRole("button", { name: "View" })
       .click();
-    await this.page.waitForLoadState("networkidle");
+    await this.continueShoppingButton.waitFor();
   }
 
   async continueShopping() {

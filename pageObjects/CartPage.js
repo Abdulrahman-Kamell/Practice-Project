@@ -31,7 +31,7 @@ export class CartPage {
 
   async checkout() {
     await this.checkoutButton.click();
-    await this.page.waitForLoadState("networkidle");
+    await this.page.locator("a.action__submit").waitFor();
   }
 
   async buyProduct(productName) {
@@ -39,7 +39,7 @@ export class CartPage {
     await this.getCartItem(productName)
       .getByRole("button", { name: "Buy Now" })
       .click();
-    await this.page.waitForLoadState("networkidle");
+    await this.page.waitForURL((url) => !url.href.includes("/dashboard/cart"));
   }
 
   async deleteProductFromCart(productName) {
@@ -59,6 +59,6 @@ export class CartPage {
 
   async continueShopping() {
     await this.continueShoppingButton.click();
-    await this.page.waitForLoadState("networkidle");
+    await this.page.locator(".card-body").first().waitFor();
   }
 }

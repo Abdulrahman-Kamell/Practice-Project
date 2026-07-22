@@ -46,6 +46,6 @@ export class CheckoutPage {
 
   async placeOrder() {
     await this.placeOrderButton.click();
-    await this.page.waitForLoadState("networkidle");
+    await this.page.getByText("THANKYOU FOR THE ORDER.").waitFor();
   }
 }
