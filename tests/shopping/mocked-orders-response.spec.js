@@ -53,7 +53,7 @@ test("renders the empty orders state via a mocked API response (network intercep
   await page.waitForResponse(
     "https://rahulshettyacademy.com/api/ecom/order/get-orders-for-customer/*",
   );
-  await page.waitForLoadState("networkidle");
+  await page.locator(".mt-4").waitFor();
 
   await expect(page.locator(".mt-4")).toContainText("No Orders");
 });
